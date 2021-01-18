@@ -1,0 +1,56 @@
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath 'no.nils:wsdl2java:0.12'
+		classpath 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+		classpath 'com.sun.xml.bind:jaxb-xjc:2.3.2'
+		classpath 'com.sun.xml.bind:jaxb-impl:2.3.2'
+		classpath 'javax.xml.bind:jaxb-api:2.3.1'
+		classpath 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'idea'
+	id 'no.nils.wsdl2java' version '0.12'
+}
+
+group = 'com.tsys'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+wsdl2java {
+	wsdlsToGenerate = [
+			['-p', 'com.tsys.virtualizer', '-autoNameResolution', "$projectDir/src/main/resources/wsdl/Intl_Consumer_inqAcctOpt.wsdl"]
+	]
+	wsdlDir = file("$projectDir/src/main/java/")
+}
+
+bootRun {
+	systemProperties System.properties
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.apache.cxf:cxf-spring-boot-starter-jaxws:3.3.4'
+	implementation 'org.apache.cxf:cxf-rt-transports-jms:3.3.5'
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+	implementation 'com.sun.activation:javax.activation:1.2.0'
+	implementation 'org.projectlombok:lombok:1.16.10'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
